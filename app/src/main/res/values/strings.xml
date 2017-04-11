@@ -1,12 +1,15 @@
 <resources>
-  <string name="app_name">Beacon Service Demo App</string>
-  <string name="click_to_set">[click to set]</string>
+    <string name="app_name">Beacon Service Demo App</string>
+    <string name="click_to_set">[click to set]</string>
 
-  <string-array name="stability_enums">
-    <item>STABLE</item>
-    <item>PORTABLE</item>
-    <item>MOBILE</item>
-    <item>ROVING</item>
-  </string-array>
+    <string-array name="stability_enums">
+        <item>STABLE</item>
+        <item>PORTABLE</item>
+        <item>MOBILE</item>
+        <item>ROVING</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

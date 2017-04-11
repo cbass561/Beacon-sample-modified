@@ -14,7 +14,7 @@
 
 package com.google.sample.beaconservice;
 
-class Constants {
+public class Constants {
   private Constants() {}
 
   static final int REQUEST_CODE_PICK_ACCOUNT = 1000;
@@ -24,4 +24,6 @@ class Constants {
 
   static final String AUTH_SCOPE = "oauth2:https://www.googleapis.com/auth/userlocation.beacon.registry";
   static final String PREFS_NAME = "com.google.sample.beaconservice.Prefs";
+
+  public static final String TEST_TAG = "TEST-TAG_BASS";
 }

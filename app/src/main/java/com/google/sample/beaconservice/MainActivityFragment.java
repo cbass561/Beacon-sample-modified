@@ -195,6 +195,7 @@ public class MainActivityFragment extends Fragment {
           case 200:
             try {
               String body = response.body().string();
+              Log.d(Constants.TEST_TAG, body);
               fetchedBeacon = new Beacon(new JSONObject(body));
             } catch (JSONException e) {
               Log.e(TAG, "JSONException", e);
@@ -217,6 +218,7 @@ public class MainActivityFragment extends Fragment {
       }
     };
     client.getBeacon(getBeaconCallback, beacon.getBeaconName());
+    Log.d(Constants.TEST_TAG, "Beacon Name: " + beacon.getBeaconName());
   }
 
   private void updateArrayAdapter() {
@@ -302,7 +304,7 @@ public class MainActivityFragment extends Fragment {
         arrayAdapter.clear();
         scanner.startScan(SCAN_FILTERS, SCAN_SETTINGS, scanCallback);
         Log.i(TAG, "starting scan");
-        client = new ProximityBeaconImpl(getActivity(), accountNameView.getText().toString());
+        client = new ProximityBeaconImpl(getActivity(), accountNameView.getText().toString()); // s.restrepo561@gmail.com
         CountDownTimer countDownTimer = new CountDownTimer(SCAN_TIME_MILLIS, 100) {
           @Override
           public void onTick(long millisUntilFinished) {

@@ -23,32 +23,20 @@ import android.os.Bundle;
 import android.util.Log;
 
 public class MainActivity extends Activity {
-  private static final int PERMISSION_REQUEST_COARSE_LOCATION = 4;
+  private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      // Android M Permission check 
-      if (this.checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("This app needs location access");
-        builder.setMessage("Please grant location access so this app can detect beacons.");
-        builder.setPositiveButton(android.R.string.ok, null);
-        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-          @Override
-          public void onDismiss(DialogInterface dialog) {
-            requestPermissions(new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
-          }
-        });
-        builder.show();
-      }
-    }
-    getFragmentManager().beginTransaction()
-        .add(R.id.container, new MainActivityFragment())
-        .commit();
+
+    requestPermission();
+
+    getFragmentManager().beginTransaction().add(R.id.container, new PatientHelperFragment()).commit();
+        //.add(R.id.container, new MainActivityFragment())
+        //.commit();
   }
+
   @Override
   public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
     switch (requestCode) {
@@ -70,6 +58,26 @@ public class MainActivity extends Activity {
           builder.show();
         }
         return;
+      }
+    }
+  }
+
+  // Request access to course location information. This is necessary to scan for beacons.
+  private void requestPermission(){
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      // Android M Permission check 
+      if (this.checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("This app needs location access");
+        builder.setMessage("Please grant location access so this app can detect beacons.");
+        builder.setPositiveButton(android.R.string.ok, null);
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+          @Override
+          public void onDismiss(DialogInterface dialog) {
+            requestPermissions(new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
+          }
+        });
+        builder.show();
       }
     }
   }

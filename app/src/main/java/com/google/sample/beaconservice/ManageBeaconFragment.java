@@ -263,6 +263,7 @@ public class ManageBeaconFragment extends Fragment {
             } else {
               namespace = tmp;
             }
+            Log.d(Constants.TEST_TAG, "Namespace " + namespace);
             redraw();
           } catch (JSONException e) {
             Log.e(TAG, "JSONException", e);
@@ -722,6 +723,7 @@ public class ManageBeaconFragment extends Fragment {
     String dataStr = attachment.getString("data");
     String base64Decoded = new String(Utils.base64Decode(dataStr));
     row.addView(makeTextView(base64Decoded));
+    Log.d(Constants.TEST_TAG, "Attachment name: " + attachment.getString("attachmentName"));
     row.addView(createAttachmentDeleteButton(id, attachment.getString("attachmentName")));
     return row;
   }

@@ -142,6 +142,7 @@ public class ProximityBeaconImpl implements ProximityBeacon {
       this.method = method;
       this.json = json;
       this.callback = callback;
+        Log.d("AUTHTASKTEST", urlPart + "/n" + method + "/n" + json + "/n");
     }
 
     @Override
@@ -151,6 +152,8 @@ public class ProximityBeaconImpl implements ProximityBeacon {
         Request.Builder requestBuilder = new Request.Builder()
             .header(AUTHORIZATION, BEARER + token)
             .url(ENDPOINT + urlPart);
+          Log.d("AUTHTASKTEST", token);
+          Log.d("AUTHTASKTEST", account + System.lineSeparator() + SCOPE);
         switch (method) {
           case PUT:
             requestBuilder.put(RequestBody.create(MEDIA_TYPE_JSON, json));
