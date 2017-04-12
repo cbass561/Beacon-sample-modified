@@ -12,8 +12,6 @@ import android.widget.Toast;
 
 import com.google.sample.beaconservice.beacon.utils.AttachmentType;
 
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,7 +33,7 @@ public class PatientHelperFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     // Inflate the layout for this fragment
-    View rootView =  inflater.inflate(R.layout.patient, container, false);
+    View rootView =  inflater.inflate(R.layout.patient2, container, false);
     Button emergency = (Button) rootView.findViewById(R.id.emergency);
     emergency.setOnClickListener(new View.OnClickListener() {
       public void onClick(View v) {
