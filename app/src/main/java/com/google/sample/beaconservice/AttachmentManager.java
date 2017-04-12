@@ -1,12 +1,14 @@
 package com.google.sample.beaconservice;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.sample.beaconservice.beacon.utils.Attachment;
 import com.google.sample.beaconservice.beacon.utils.AttachmentList;
+import com.google.sample.beaconservice.beacon.utils.AttachmentType;
 import com.google.sample.libproximitybeacon.ProximityBeacon;
 import com.google.sample.libproximitybeacon.ProximityBeaconImpl;
 
@@ -35,13 +37,13 @@ public class AttachmentManager {
   private Context currentActivity;
   private ProximityBeacon client;
   private AttachmentList currentAttachments;
-  private CountDownLatch countDownLatch;
 
   public AttachmentManager(Context context){
     currentActivity = context;
     client = new ProximityBeaconImpl(context, USER_ACCOUNT);
     currentAttachments = new AttachmentList();
     fetchAttachments();
+    Log.d(Constants.TEST_TAG, "CurrentAttachments: " + currentAttachments.size());
   }
 
   /**
@@ -50,7 +52,10 @@ public class AttachmentManager {
    */
   public void addAttachment(int roomNumber, String message){
     // this is called when a user clicks a button
-    //doesRoomHaveAttachment(roomNumber);
+    if(message.equals(AttachmentType.EMERGENCY.toString())){
+      // delete all the messages associated with this room
+
+    }
     Callback createAttachmentCallback = new Callback() {
       @Override
       public void onFailure(Request request, IOException e) {
@@ -73,7 +78,7 @@ public class AttachmentManager {
         }
       }
     };
-    client.createAttachment(createAttachmentCallback, BEACON_NAME, buildCreateAttachmentJsonBody(message));
+    client.createAttachment(createAttachmentCallback, BEACON_NAME, buildCreateAttachmentJsonBody(roomNumber+"!"+message));
   }
 
   public void removeAttachment(Attachment attachment){
@@ -96,6 +101,7 @@ public class AttachmentManager {
       }
     };
     //TODO: update this to use the attachment message
+    currentAttachments.remove(attachment);
     client.deleteAttachment(deleteAttachmentCallback, attachment.getAttachmentName());
   }
 
@@ -123,10 +129,6 @@ public class AttachmentManager {
   }
 
   private void fetchAttachments(){
-    fetchAttachments(false);
-  }
-
-  private void fetchAttachments(final boolean countdown){
     Callback listAttachmentsCallback = new Callback() {
       @Override
       public void onFailure(Request request, IOException e) {
@@ -148,8 +150,7 @@ public class AttachmentManager {
               Log.d(Constants.TEST_TAG, attachment.toString());
               currentAttachments.add(new Attachment(attachment));
             }
-            if(countdown) countDownLatch.countDown();
-            printCurrentAttachment(); //for testing
+            printCurrentAttachment();
           }catch (JSONException e) {
             Log.e(Constants.TEST_TAG, "JSONException in fetching attachments", e);
           }
@@ -174,17 +175,6 @@ public class AttachmentManager {
       Log.e(Constants.TEST_TAG, "JSONException", e);
     }
     return null;
-  }
-
-  private boolean doesRoomHaveAttachment(int roomNumber){
-    countDownLatch = new CountDownLatch(1);
-    fetchAttachments(true);
-    try {
-      countDownLatch.await();
-    }catch (InterruptedException e){
-      Log.e(Constants.TEST_TAG, "CountDownLatch: " + e);
-    }
-    return currentAttachments.doesRoomHaveAttachment(roomNumber);
   }
 
   private void logErrorAndToast(String message) {

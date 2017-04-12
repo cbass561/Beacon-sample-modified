@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.sample.beaconservice.beacon.utils.AttachmentType;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -29,7 +31,6 @@ public class PatientHelperFragment extends Fragment {
     attachmentManager = new AttachmentManager(getActivity());
   }
 
-
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
@@ -38,6 +39,7 @@ public class PatientHelperFragment extends Fragment {
     Button emergency = (Button) rootView.findViewById(R.id.emergency);
     emergency.setOnClickListener(new View.OnClickListener() {
       public void onClick(View v) {
+        attachmentManager.addAttachment(123, AttachmentType.EMERGENCY.toString());
         Toast.makeText(getActivity(), "Emergency Click", Toast.LENGTH_SHORT).show();
       }
     });
@@ -46,6 +48,7 @@ public class PatientHelperFragment extends Fragment {
     button1.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        attachmentManager.addAttachment(123, AttachmentType.FOOD.toString());
         Toast.makeText(getActivity(), "Button1 Click", Toast.LENGTH_SHORT).show();
       }
     });
@@ -54,6 +57,7 @@ public class PatientHelperFragment extends Fragment {
     button2.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        attachmentManager.addAttachment(123, AttachmentType.WATER.toString());
         Toast.makeText(getActivity(), "Button2 Click", Toast.LENGTH_SHORT).show();
       }
     });
@@ -61,6 +65,7 @@ public class PatientHelperFragment extends Fragment {
     button3.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        attachmentManager.addAttachment(123, AttachmentType.BATHROOM.toString());
         Toast.makeText(getActivity(), "Button3 Click", Toast.LENGTH_SHORT).show();
       }
     });
@@ -68,14 +73,10 @@ public class PatientHelperFragment extends Fragment {
     button4.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        attachmentManager.addAttachment(123, AttachmentType.NON_EMERGENCY.toString());
         Toast.makeText(getActivity(), "Button4 Click", Toast.LENGTH_SHORT).show();
       }
     });
     return rootView;
   }
-
-  private void updateBeaconAttachment(){
-
-  }
-
 }
