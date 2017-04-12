@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -23,6 +26,13 @@ public class PatientHelperFragment extends Fragment {
     super.onCreate(savedInstanceState);
     attachmentManager = new AttachmentManager(getActivity());
     attachmentManager.updateAttachment("test");
+    new Timer().schedule(new TimerTask() {
+      @Override
+      public void run() {
+        // this code will be executed after 2 seconds
+        attachmentManager.removeAttachment("test");
+      }
+    }, 2000);
   }
 
 

@@ -14,7 +14,7 @@ import org.json.JSONObject;
 public class Attachment {
   private String attachmentName;
   private String namespace;
-  private String type;
+  private int type;
   private String data;
   private String creationTime;
 
@@ -23,7 +23,7 @@ public class Attachment {
       attachmentName = attachmentInfo.getString("attachmentName");
       String[] namespacedType = attachmentInfo.getString("namespacedType").split("/");
       namespace = namespacedType[0];
-      type = namespacedType[1];
+      type = Integer.parseInt(namespacedType[1]);
       data = attachmentInfo.getString("data");
     } catch (JSONException e) {
       // something bad happened
@@ -39,7 +39,7 @@ public class Attachment {
     return namespace;
   }
 
-  public String getAttachmentType() {
+  public int getAttachmentType() {
     return type;
   }
 
