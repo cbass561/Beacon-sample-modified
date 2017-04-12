@@ -1,6 +1,7 @@
 package com.google.sample.beaconservice;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by Sebastian on 4/11/2017.
@@ -33,21 +35,22 @@ public class AttachmentManager {
   private Context currentActivity;
   private ProximityBeacon client;
   private AttachmentList currentAttachments;
-  private JSONObject testBody;
+  private CountDownLatch countDownLatch;
 
   public AttachmentManager(Context context){
     currentActivity = context;
     client = new ProximityBeaconImpl(context, USER_ACCOUNT);
     currentAttachments = new AttachmentList();
+    fetchAttachments();
   }
 
   /**
    * This attaches an attachment to the predefined beacon.
-   * @param type This should be the room number of the patient.
-   * @param message This is the attachment associated with the patient.
+   * @param message This is the attachment data associated with the patient.
    */
-  public void addAttachment(int type, String message){
+  public void addAttachment(int roomNumber, String message){
     // this is called when a user clicks a button
+    //doesRoomHaveAttachment(roomNumber);
     Callback createAttachmentCallback = new Callback() {
       @Override
       public void onFailure(Request request, IOException e) {
@@ -60,6 +63,7 @@ public class AttachmentManager {
         if (response.isSuccessful()) {
           try {
             JSONObject json = new JSONObject(body);
+            currentAttachments.add(new Attachment(json));
             Log.d(Constants.TEST_TAG, "Create Response: " + json.toString());
           } catch (JSONException e) {
             logErrorAndToast("JSONException in building attachment data", e);
@@ -69,14 +73,10 @@ public class AttachmentManager {
         }
       }
     };
-
-    client.createAttachment(createAttachmentCallback, BEACON_NAME, buildCreateAttachmentJsonBody(Integer.toString(111), "BYE"));
-
-    // before an attachment can be sent, you need to check if there already an attachments associated with that type
-    // if there are, then that attachment needs to be deleted and
+    client.createAttachment(createAttachmentCallback, BEACON_NAME, buildCreateAttachmentJsonBody(message));
   }
 
-  public void removeAttachment(String attachmentName){
+  public void removeAttachment(Attachment attachment){
     // this will remove an attachment from the beacons
     Callback deleteAttachmentCallback = new Callback() {
       @Override
@@ -95,41 +95,38 @@ public class AttachmentManager {
         }
       }
     };
-    client.deleteAttachment(deleteAttachmentCallback, currentAttachments.get(0).getAttachmentName());
-
+    //TODO: update this to use the attachment message
+    client.deleteAttachment(deleteAttachmentCallback, attachment.getAttachmentName());
   }
 
-  public void updateAttachment(String message){
-    fetchAttachments();
-    if(currentAttachments == null || currentAttachments.size() != 0){
-      // there are attachments
-      // deleteCurrentAttachments()
-    }
-    //deleteCurrentAttachment(attachment);
-    //sendNewAttachment();
-  }
-
-  private void deleteCurrentAttachment(final String attachment){
+  public void removeAttachment(String attachmentMessage){
+    // this will remove an attachment from the beacons
     Callback deleteAttachmentCallback = new Callback() {
       @Override
       public void onFailure(Request request, IOException e) {
-        Log.e(Constants.TEST_TAG, String.format("Failed request: %s, IOException %s", request, e));
+        logErrorAndToast("Failed request: " + request, e);
       }
 
       @Override
       public void onResponse(Response response) throws IOException {
-        if(response.isSuccessful()){
-          // the attachment was removed
-        }else {
-          String body = response.body().string();
+        String body = response.body().string();
+        if (response.isSuccessful()) {
+          Log.d(Constants.TEST_TAG, "Delete response: " + body);
+        } else {
+          body = response.body().string();
           logErrorAndToast("Unsuccessful deleteAttachment request: " + body);
         }
       }
     };
-    client.deleteAttachment(deleteAttachmentCallback, attachment);
+    //TODO: update this to use the attachment message
+    client.deleteAttachment(deleteAttachmentCallback, currentAttachments.get(0).getAttachmentName());
   }
 
   private void fetchAttachments(){
+    fetchAttachments(false);
+  }
+
+  private void fetchAttachments(final boolean countdown){
     Callback listAttachmentsCallback = new Callback() {
       @Override
       public void onFailure(Request request, IOException e) {
@@ -148,8 +145,10 @@ public class AttachmentManager {
             JSONArray attachments = json.getJSONArray("attachments");
             for (int i = 0; i < attachments.length(); i++) {
               JSONObject attachment = attachments.getJSONObject(i);
+              Log.d(Constants.TEST_TAG, attachment.toString());
               currentAttachments.add(new Attachment(attachment));
             }
+            if(countdown) countDownLatch.countDown();
             printCurrentAttachment(); //for testing
           }catch (JSONException e) {
             Log.e(Constants.TEST_TAG, "JSONException in fetching attachments", e);
@@ -166,15 +165,26 @@ public class AttachmentManager {
     }
   }
 
-  private JSONObject buildCreateAttachmentJsonBody(String type, String data) {
+  private JSONObject buildCreateAttachmentJsonBody(String data) {
     try {
-      return new JSONObject().put("namespacedType", NAMESPACE + "/" + type)
+      return new JSONObject().put("namespacedType", NAMESPACE + "/" + TYPE)
               .put("data", Utils.base64Encode(data.getBytes()));
     }
     catch (JSONException e) {
       Log.e(Constants.TEST_TAG, "JSONException", e);
     }
     return null;
+  }
+
+  private boolean doesRoomHaveAttachment(int roomNumber){
+    countDownLatch = new CountDownLatch(1);
+    fetchAttachments(true);
+    try {
+      countDownLatch.await();
+    }catch (InterruptedException e){
+      Log.e(Constants.TEST_TAG, "CountDownLatch: " + e);
+    }
+    return currentAttachments.doesRoomHaveAttachment(roomNumber);
   }
 
   private void logErrorAndToast(String message) {

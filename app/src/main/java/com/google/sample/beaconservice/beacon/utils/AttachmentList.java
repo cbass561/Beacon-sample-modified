@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 public class AttachmentList{
   ArrayList<Attachment> attachments;
+
   public AttachmentList(){
     attachments = new ArrayList<Attachment>();
   }
@@ -50,12 +51,12 @@ public class AttachmentList{
 
   /**
    * Checks whether the list of attachments contains the type already
-   * @param type The room number assocaited with the patient
+   * @param roomNumber The room number assocaited with the patient
    * @return
    */
-  public boolean containsType(int type){
+  public boolean doesRoomHaveAttachment(int roomNumber){
     for (Attachment attachment: attachments){
-      if(attachment.getAttachmentType() == type){
+      if(attachment.getRoomNumber() == roomNumber){
         return true;
       }
     }

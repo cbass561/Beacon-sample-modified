@@ -7,6 +7,8 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -25,14 +27,6 @@ public class PatientHelperFragment extends Fragment {
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     attachmentManager = new AttachmentManager(getActivity());
-    attachmentManager.updateAttachment("test");
-    new Timer().schedule(new TimerTask() {
-      @Override
-      public void run() {
-        // this code will be executed after 2 seconds
-        attachmentManager.removeAttachment("test");
-      }
-    }, 2000);
   }
 
 
@@ -40,7 +34,44 @@ public class PatientHelperFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     // Inflate the layout for this fragment
-    return inflater.inflate(R.layout.fragment_patient_helper, container, false);
+    View rootView =  inflater.inflate(R.layout.patient, container, false);
+    Button emergency = (Button) rootView.findViewById(R.id.emergency);
+    emergency.setOnClickListener(new View.OnClickListener() {
+      public void onClick(View v) {
+        Toast.makeText(getActivity(), "Emergency Click", Toast.LENGTH_SHORT).show();
+      }
+    });
+
+    Button button1 = (Button) rootView.findViewById(R.id.button1);
+    button1.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Toast.makeText(getActivity(), "Button1 Click", Toast.LENGTH_SHORT).show();
+      }
+    });
+
+    Button button2 = (Button) rootView.findViewById(R.id.button2);
+    button2.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Toast.makeText(getActivity(), "Button2 Click", Toast.LENGTH_SHORT).show();
+      }
+    });
+    Button button3 = (Button) rootView.findViewById(R.id.button3);
+    button3.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Toast.makeText(getActivity(), "Button3 Click", Toast.LENGTH_SHORT).show();
+      }
+    });
+    Button button4 = (Button) rootView.findViewById(R.id.button4);
+    button4.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Toast.makeText(getActivity(), "Button4 Click", Toast.LENGTH_SHORT).show();
+      }
+    });
+    return rootView;
   }
 
   private void updateBeaconAttachment(){

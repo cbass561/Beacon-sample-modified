@@ -25,20 +25,20 @@ import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 
-class Utils {
+public class Utils {
   private Utils() {}  // static functions only
 
   private static final char[] HEX = "0123456789ABCDEF".toCharArray();
 
-  static byte[] base64Decode(String s) {
+  public static byte[] base64Decode(String s) {
     return Base64.decode(s, Base64.DEFAULT);
   }
 
-  static String base64Encode(byte[] b) {
+  public static String base64Encode(byte[] b) {
     return Base64.encodeToString(b, Base64.DEFAULT).trim();
   }
 
-  static String toHexString(byte[] bytes) {
+  public static String toHexString(byte[] bytes) {
     char[] chars = new char[bytes.length * 2];
     for (int i = 0; i < bytes.length; i++) {
       int c = bytes[i] & 0xFF;
