@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-  <!-- Base application theme. -->
-  <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">
-    <!-- Customize your theme here. -->
+  <style name="AppTheme.Button.blue" parent="Widget.AppCompat.Button.Colored">
+    <item name="android:colorButtonNormal">@color/blue</item>
+    <item name="android:textColor">@color/white</item>
+  </style>
+  <style name="AppTheme.Button.orange" parent="Widget.AppCompat.Button.Colored">
+    <item name="android:colorButtonNormal">@color/darkorange</item>
+    <item name="android:textColor">@color/white</item>
+  </style>
+  <style name="AppTheme.Button.red" parent="Widget.AppCompat.Button.Colored">
+    <item name="android:colorButtonNormal">@color/darkred</item>
+    <item name="android:textColor">@color/white</item>
+  </style>
+  <style name="AppTheme.Button.green" parent="Widget.AppCompat.Button.Colored">
+    <item name="android:colorButtonNormal">@color/green</item>
+    <item name="android:textColor">@color/white</item>
+  </style>
+  <style name="AppTheme.Button.darkblue" parent="Widget.AppCompat.Button.Colored">
+    <item name="android:colorButtonNormal">@color/darkblue</item>
+    <item name="android:textColor">@color/white</item>
+  </style>
+  <style name="AppTheme.Button.darkpurple" parent="Widget.AppCompat.Button.Colored">
+    <item name="android:colorButtonNormal">@color/darkpurple</item>
+    <item name="android:textColor">@color/white</item>
   </style>
 
 </resources>

@@ -41,7 +41,7 @@ public class AttachmentList{
    */
   public void remove(Attachment attachment){
     // ugly but want to make sure it deletes the correct attachment. I dont trust the default remove() function
-    for(int i =0; i <= attachments.size(); i++){
+    for(int i =0; i < attachments.size(); i++){
       Attachment curAttachment = attachments.get(i);
       if(curAttachment.getAttachmentName().equals(attachment.getAttachmentName())){
         attachments.remove(i);
@@ -54,9 +54,9 @@ public class AttachmentList{
    * @param roomNumber The room number assocaited with the patient
    * @return
    */
-  public boolean doesRoomHaveAttachment(int roomNumber){
+  public boolean doesRoomHaveSameAttachment(int roomNumber, String message){
     for (Attachment attachment: attachments){
-      if(attachment.getRoomNumber() == roomNumber){
+      if(attachment.getRoomNumber() == roomNumber && attachment.getMessage().equals(message)){
         return true;
       }
     }

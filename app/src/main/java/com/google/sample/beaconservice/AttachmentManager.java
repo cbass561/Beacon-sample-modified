@@ -22,6 +22,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -52,9 +54,11 @@ public class AttachmentManager {
    */
   public void addAttachment(int roomNumber, String message){
     // this is called when a user clicks a button
-    if(message.equals(AttachmentType.EMERGENCY.toString())){
+    if(message.equals(AttachmentType.EMERGENCY.toString())) {
       // delete all the messages associated with this room
-
+    }
+    if(currentAttachments.doesRoomHaveSameAttachment(roomNumber, message)){
+      return;
     }
     Callback createAttachmentCallback = new Callback() {
       @Override
@@ -128,6 +132,27 @@ public class AttachmentManager {
     client.deleteAttachment(deleteAttachmentCallback, currentAttachments.get(0).getAttachmentName());
   }
 
+  /**
+   * This will be called when the nurse hits the "Arrived" button.
+   * @param room Room number.
+   */
+  public void removeAllAttachmentsToRoom(int room){
+    Log.d(Constants.TEST_TAG, Integer.toString(currentAttachments.size()));
+    for(int i=0; i < currentAttachments.size(); i++){
+      final Attachment att = currentAttachments.get(i);
+      if(att.getRoomNumber() == room){
+        new Timer().schedule(new TimerTask() {
+          @Override
+          public void run() {
+            // this code will be executed after 2 seconds
+            removeAttachment(att);
+          }
+        }, 250);
+
+      }
+    }
+  }
+
   private void fetchAttachments(){
     Callback listAttachmentsCallback = new Callback() {
       @Override
@@ -150,6 +175,7 @@ public class AttachmentManager {
               Log.d(Constants.TEST_TAG, attachment.toString());
               currentAttachments.add(new Attachment(attachment));
             }
+            Log.d(Constants.TEST_TAG, Integer.toString(currentAttachments.size()));
             printCurrentAttachment();
           }catch (JSONException e) {
             Log.e(Constants.TEST_TAG, "JSONException in fetching attachments", e);
@@ -190,5 +216,8 @@ public class AttachmentManager {
   private void toast(String s) {
     Toast.makeText(currentActivity, s, Toast.LENGTH_LONG).show();
   }
+
+  public int currentAttachmentsCount(){
+    return currentAttachments.size();}
 
 }
